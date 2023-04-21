@@ -1,133 +1,158 @@
 # Управление поездами
-#
+
 
 class Station
-  attr_reader :list_of_train
+  # Станция
+  # - Название указываетсяс при создании
+  # - Может принимать поезда (по одному за раз)
+  # - Может возвращать список всех поездов на станции, находящихся в текущий момент
+  # - Может возвращать список поездов на станции по типу: к-во грузовых, пассажирских
+  # - Может отправлять поезда (по одному за раз, при этом, поезд удаляется из списка поездов, находящихся на станции)
+
+  attr_reader :name
+  attr_reader :trains
 
   def initialize(name)
     @name = name
-    @list_of_train = []
+    
+    # Список поездов на станции
+    # Содержит экземпляры класса Train
+    @trains = []
   end
 
   def take_the_train=(train)
-    self.list_of_train.append(train)
+    # Принять поезд
+    # Аргумент - экземпляр класса Train
+    trains.append(train)
   end
 
   def get_trains_on_type(type)
-    trains = []
-    for train in list_of_train do
-      if train.type == type then
-        trains.append(train)
-      end
-    end
-    trains
+    # Вернуть список поездов на станции по титпу
+    trains.select{|train| train.type == type}
   end
 
   def send_train(train)
-    train.forward
-    self.list_of_train.delete(train)
+    # Отправить поезд
+    # Аргумент - экземпляр класса Train
+    train.forward # Поезд перемещается на следующую станция (метод объекта Train)
+    trains.delete(train)
   end
 end
 
 
 class Route
-  attr_reader :start_station
-  attr_reader :finish_station
-  attr_accessor :current_index
+  # Маршрут
+  # - Начальная и конечная станции указываются при создании маршрута
+  # - Может добавлять промежуточную станцию в список
+  # - Может удалять промежуточную станцию из списка
+  # - Может выводить список всех станций по-порядку от начальной до конечной
+   
+  attr_reader :stations
+  attr_accessor :current_station
 
   def initialize(start_station, finish_station)
-    @start_station = start_station
-    @finish_station = finish_station
-    @list_station = []
-    @current_index = 0
+    @stations = [start_station, finish_station]
+    @current_station = 0
   end
 
   def add_station(station)
-    self.list_station.append(station)
+    # Вставить новую станцию перед конечной станцией 
+    stations.insert(stations.size-1, station)
   end
 
   def del_station(station)
-    self.list_station.delete(station)
+    # Удалить из маршрута станцию с именем station
+    stations.delete(station)
   end
 
-  def get_all_station
-    puts("#{start_station} - #{list_station} - #{finish_station}")
-  end
-
-  def next_station
-    self.current_index += 1
-  end
-
-  def prev_station
-    self.current_index -= 1
-  end
-
-  def get_current_station
-    list_station[current_index]
-  end
-
-  def get_next_station
-    list_station[current_index + 1]
-  end
-
-  def get_prev_station
-    list_station[current_index - 1]
+  def get_stations
+    # Вывести список всех станций
+    puts(stations)
   end
 end
 
 
 class Train
-  attr_accessor :speed
-  attr_accessor :num_train_car
+  # Поезд
+  # - Номер (стр), тип (грузовой, пассажирский), количество вагонов указываются при создании экземпляра
+  # - Может набирать скорость
+  # - Может возвращать текущую скорость
+  # - Может тормозить (сбрасывать скорость до нуля)
+  # - Может возвращать количество вагонов
+  # - Может прицеплять/отцеплять вагоны (по одному вагону за операцию), только если поезд не движется.
+  # - Может принимать маршрут следования (объект класса Route)
+  # - При назначении маршрута поезду, поезд автоматически перемещается на первую станцию в маршруте.
+  # - Может перемещаться на одну станцию вперед или назад
+  # - Может возвращать предыдущую станцию, текущую, следующую, на основе маршрута
+
+  attr_accessor :speed # Набрать скорость, вернуть текущую скорость 
+  attr_accessor :number_of_wagons # Вернуть количество вагонов
   attr_accessor :type
   attr_reader :route
 
-  def initialize(number, type, num_train_car)
+  def initialize(number, type, number_of_wagons)
     @number = number
     @type = type
-    @num_train_car = num_train_car
+    @number_of_wagons = number_of_wagons
     @speed = 0
-    @route = 0
+    @route = nil # Может принимать экземпляр класса Route
   end
 
   def stop
+    # Тормозить
     self.speed = 0
   end
 
-  def add_train_car
+  def add_wagon
+    # Прицепить вагон
     if speed == 0 then
-      self.num_train_car += 1
+      self.number_of_wagons += 1
     end
   end
 
-  def del_train_car
-    if speed == 0 && num_train_car > 0 then
+  def del_wagon
+    # Отцепить вагон
+    if speed == 0 && number_of_wagons > 0 then
       self.num_train_car -= 1
     end
   end
 
   def route=(route)
-    route.start_station
+    # Назначить маршрут и встать на первую станцию
+    route.current_station = 0
   end
 
-  def forward
-    route.next_station
+  def go_forward
+    # Переместиться на одну станцию вперед
+    if route.current_station < (route.stations.size - 1) then # Если станция не последняя
+      route.current_station += 1
+    end
   end
 
-  def backward
-    route.prev_station
+  def go_backward
+    # Переместиться на одну станцию назад
+    if route.current_station > 0 then # Если станция не первая
+      route.curret_station -= 1
+    end
   end
 
-  def get_current_station
-    route.get_current_station
-  enid
-
-  def get_next_station
-    route.get_next_station
+  def current_station
+    # Вернуть текущую станцию 
+    route.current_station
   end
 
-  def get_prev_station
-    route.get_prev_station
+  def next_station
+    # Вернуть следующую станцию
+    if route.current_station < (route.stations.size -1) then # Если станция не последняя
+      route.current_station + 1
+    end
+  end
+
+  def previous_station
+    # Вернуть предыдущую станцию
+    if route.current_station > 0 then # Если станция не первая
+      route.get_prev_station
+    end
   end
 
   

@@ -89,6 +89,7 @@ class Train
   attr_accessor :number_of_wagons # Вернуть количество вагонов
   attr_accessor :type
   attr_reader :route
+  attr_accessor :current_station_index
 
   def initialize(number, type, number_of_wagons)
     @number = number
@@ -96,6 +97,7 @@ class Train
     @number_of_wagons = number_of_wagons
     @speed = 0
     @route = nil # Может принимать экземпляр класса Route
+    @current_station_index = 0
   end
 
   def stop
@@ -119,39 +121,39 @@ class Train
 
   def route=(route)
     # Назначить маршрут и встать на первую станцию
-    route.current_station = 0
+    self.current_station_index = 0
   end
 
   def go_forward
     # Переместиться на одну станцию вперед
-    if route.current_station < (route.stations.size - 1) then # Если станция не последняя
-      route.current_station += 1
+    if current_station_index < (route.stations.size - 1) then # Если станция не последняя
+      self.current_station_index += 1
     end
   end
 
   def go_backward
     # Переместиться на одну станцию назад
-    if route.current_station > 0 then # Если станция не первая
-      route.curret_station -= 1
+    if current_station_index > 0 then # Если станция не первая
+      self.curret_station_index -= 1
     end
   end
 
   def current_station
     # Вернуть текущую станцию 
-    route.current_station
+    route[@current_station_index]
   end
 
   def next_station
     # Вернуть следующую станцию
-    if route.current_station < (route.stations.size -1) then # Если станция не последняя
-      route.current_station + 1
+    if current_station_index < (route.stations.size -1) then # Если станция не последняя
+      route[@current_station_index + 1]
     end
   end
 
   def previous_station
     # Вернуть предыдущую станцию
-    if route.current_station > 0 then # Если станция не первая
-      route.get_prev_station
+    if current_station_index > 0 then # Если станция не первая
+      route[@current_station_index - 1]
     end
   end
 

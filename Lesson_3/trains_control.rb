@@ -96,8 +96,6 @@ class Train
     @type = type
     @number_of_wagons = number_of_wagons
     @speed = 0
-    @route = nil # Может принимать экземпляр класса Route
-    @current_station_index = 0
   end
 
   def stop
@@ -121,21 +119,18 @@ class Train
 
   def route=(route)
     # Назначить маршрут и встать на первую станцию
+    self.route = route
     self.current_station_index = 0
   end
 
   def go_forward
     # Переместиться на одну станцию вперед
-    if current_station_index < (route.stations.size - 1) then # Если станция не последняя
-      self.current_station_index += 1
-    end
+    self.current_station_index += 1 if next_station    
   end
 
   def go_backward
     # Переместиться на одну станцию назад
-    if current_station_index > 0 then # Если станция не первая
-      self.curret_station_index -= 1
-    end
+    self.curret_station_index -= 1 if previous_station    
   end
 
   def current_station

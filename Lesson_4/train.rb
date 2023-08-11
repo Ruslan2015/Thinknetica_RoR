@@ -1,17 +1,13 @@
-# Класс поезд
-
-
 class Train
-
   attr_accessor :speed # Набирает скорость, возвращает скорость
   attr_accessor :wagons # Возвращает массив объектов "вагон"
   attr_accessor :route
   attr_accessor :current_station_index
-  attr_reader :number
 
-  # При создании присваивается номер
-  def initialize(number)
-    @number = number
+  def initialize
+    @wagons  = {}
+    @route = nil
+    @current_station_index = nil
   end
 
   # Тормозит (сбрасывает скорость до 0)
@@ -20,8 +16,7 @@ class Train
   end
 
   # Может прицеплять и отцеплять вагоны если не движется
-  def add_wagon=(wagon)
-    puts("Добавление вагона!")
+  def add_wagon(wagon)
     if not speed? then
       self.wagons[wagon.object_id] = wagon
     else
@@ -29,12 +24,12 @@ class Train
     end
   end
 
-  def del_wagon(wagon_id)
-    self.wagons.delete(wagon_id) if not speed? and self.wagons.size
+  def del_wagon
+    self.wagons.delete(wagons.size - 1) if not speed? and self.wagons.size
   end
 
   # Принимает маршрут следования и в этот момент перемещается на первую станцию
-  def route=(route)
+  def set_route(route)
     self.route = route
     self.current_station_index =  0
   end
@@ -54,14 +49,14 @@ class Train
   end
 
   def next_station
-    if current_station_index < (route.stations.size - 1) then
-      route[@current_station_index + 1]
+    if current_station_index < (route.stations.size - 1)
+      route.stations[self.current_station_index + 1]
     end
   end
 
   def previous_station
     if current_station_index > 0 then
-      route[@current_station_index - 1]
+      route.stations[self.current_station_index - 1]
     end
   end
 
@@ -74,6 +69,4 @@ class Train
       speed
     end
   end
-  #
 end
-

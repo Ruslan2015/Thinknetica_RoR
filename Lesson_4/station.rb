@@ -1,6 +1,3 @@
-# Класс станция
-#
-
 class Station
   attr_accessor :trains_at_the_station
   attr_accessor :name
@@ -8,7 +5,7 @@ class Station
   # При создании указывается название
   def initialize(name)
     @name = name
-    @trains_at_the_station = {}
+    @trains_at_the_station = []
   end
 
   # Принять поезд по одному за раз
@@ -19,7 +16,7 @@ class Station
   # Вернуть список поездов на станции, находящихся в текущий момент
   def list_of_trains
     if trains_at_the_station
-      trains_at_the_station.each { |tr| puts "ID: #{tr[0]} Номер: #{tr[1].number}"}
+      trains_at_the_station.each { |tr| puts "#{tr.object_id}"}
     end
   end
 

@@ -1,10 +1,18 @@
 require_relative 'manufacturer'
+require_relative 'instance_counter'
 
 class Train
+  #include InstanceCounter
   @@trains = []
 
+  def self.all
+    @@trains
+  end
+
   def self.find(number)
-    @@trains.each {|tr| tr if tr.number == number}
+    res = nil
+    @@trains.each {|tr| res=tr if tr.number == number}
+    res
   end
 
   include Manufacturer
@@ -21,6 +29,7 @@ class Train
     @wagons  = {}
     @route = nil
     @current_station_index = nil
+    #@@instances_count = register_instance(@@instances_count)
   end
 
   # Тормозит (сбрасывает скорость до 0)

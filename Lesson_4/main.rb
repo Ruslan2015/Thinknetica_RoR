@@ -26,20 +26,29 @@ class Main
     make_station('Иркутс')
     make_station('Омск')
 
-    make_train('cargo')
-    make_train('cargo')
-    make_train('passenger')
-    make_train('passenger')
+    make_train(101, 'cargo')
+    make_train(102, 'cargo')
+    make_train(201, 'passenger')
+    make_train(202, 'passenger')
 
     make_route(stations[0], stations[1])
     make_route(stations[0], stations[3])
 
     puts 'Созданы станции:'
-    stations.each {|st| puts "ID: #{st.object_id}, название: #{st.name}"}
+    Station.all.each {|st| puts "ID: #{st.object_id}, название: #{st.name}, к-во: #{st.class.instances}"}
+
     puts 'Созданы поезда:'
-    trains.each {|tr| puts "ID: #{tr.object_id}, тип: #{tr.class}"}
+    Train.all.each {|tr| puts "Номер: #{tr.number}, тип: #{tr.class}, к-во: #{tr.class.instances}"}
+
     puts 'Созданы маршруты:'
     routes.each {|rt| puts "ID: #{rt.object_id}, между городами: #{rt.stations[0].name} -> #{rt.stations[1].name}"}
+
+    puts 'Поиск поездов по номерам'
+    puts 'Ищем номер 101'
+    puts Train.find(101)
+    puts 'Ищем номер 301'
+    puts Train.find(301)
+    puts 'и не находим его'
 
     puts 'Управление станциями'
     control_stations_of_route(routes[0], stations[2])
@@ -90,9 +99,9 @@ class Main
     self.stations.append(Station.new(station_name))
   end
 
-  def make_train(type_of_train)
-    self.trains.append(CargoTrain.new) if type_of_train == 'cargo'
-    self.trains.append(PassengerTrain.new) if type_of_train == 'passenger'
+  def make_train(number, type_of_train)
+    self.trains.append(CargoTrain.new(number)) if type_of_train == 'cargo'
+    self.trains.append(PassengerTrain.new(number)) if type_of_train == 'passenger'
   end
 
   def make_route(start_station, end_station)

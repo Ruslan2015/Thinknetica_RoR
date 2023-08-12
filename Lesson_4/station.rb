@@ -1,4 +1,13 @@
+require_relative 'instance_counter'
+
 class Station
+  include InstanceCounter
+  @@stations = []
+
+  def self.all
+    @@stations
+  end
+
   attr_accessor :trains_at_the_station
   attr_accessor :name
 
@@ -6,7 +15,10 @@ class Station
   def initialize(name)
     @name = name
     @trains_at_the_station = []
+    @@stations << self
+    @@instances_count = register_instance(@@instances_count)
   end
+
 
   # Принять поезд по одному за раз
   def take_the_train=(train)

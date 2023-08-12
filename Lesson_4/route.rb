@@ -1,9 +1,13 @@
+require_relative 'instance_counter'
+
 class Route
+  include InstanceCounter
   attr_accessor :stations
 
   # Начальная и конечная станции указываются при создании маршрута
   def initialize(start_station, end_station)
     @stations = {0=>start_station, 1=>end_station} # Порядковый номер на маршруте => Название станции
+    @@instances_count = register_instance(@@instances_count)
   end
 
   # Добавить промежуточную станцию

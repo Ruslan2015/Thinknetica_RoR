@@ -1,10 +1,23 @@
+require_relative 'manufacturer'
+
 class Train
+  @@trains = []
+
+  def self.find(number)
+    @@trains.each {|tr| tr if tr.number == number}
+  end
+
+  include Manufacturer
+
   attr_accessor :speed # Набирает скорость, возвращает скорость
   attr_accessor :wagons # Возвращает массив объектов "вагон"
   attr_accessor :route
   attr_accessor :current_station_index
+  attr_accessor :number
 
-  def initialize
+  def initialize(number)
+    @@trains << self
+    @number = number
     @wagons  = {}
     @route = nil
     @current_station_index = nil
@@ -17,7 +30,7 @@ class Train
 
   # Может прицеплять и отцеплять вагоны если не движется
   def add_wagon(wagon)
-    if not speed? then
+    if not speed?
       self.wagons[wagon.object_id] = wagon
     else
       puts("Нельзя прицепить вагон! Поезд движется со скоростью #{@speed}")

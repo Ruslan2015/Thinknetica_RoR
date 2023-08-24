@@ -11,7 +11,7 @@ class Station
   attr_accessor :trains_at_the_station
   attr_accessor :name
 
-  NAME_FORMAT = /^[a-z]+$/i
+  NAME_FORMAT = /^[a-zа-ю]+$/i
   # При создании указывается название
   def initialize(name)
     @name = name
@@ -63,6 +63,6 @@ class Station
 
   def validate!
     raise "Name of station can't be nill" if name.nil?
-    raise "Name of station should be text" if name != NAME_FORMAT
+    raise "Name of station should be text" if name !~ NAME_FORMAT
   end
 end

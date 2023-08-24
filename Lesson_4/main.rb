@@ -23,13 +23,13 @@ class Main
     make_station('Москва')
     make_station('Питер')
     make_station('Тверь')
-    make_station('Иркутс')
+    make_station('Иркутск')
     make_station('Омск')
 
-    make_train(101, 'cargo')
-    make_train(102, 'cargo')
-    make_train(201, 'passenger')
-    make_train(202, 'passenger')
+    make_train('101-00', 'cargo')
+    make_train('102-aa', 'cargo')
+    make_train('201-00', 'passenger')
+    make_train('202-aa', 'passenger')
 
     make_route(stations[0], stations[1])
     make_route(stations[0], stations[3])
@@ -45,9 +45,9 @@ class Main
 
     puts 'Поиск поездов по номерам'
     puts 'Ищем номер 101'
-    puts Train.find(101)
+    puts Train.find('101-00')
     puts 'Ищем номер 301'
-    puts Train.find(301)
+    puts Train.find('301-00')
     puts 'и не находим его'
 
     puts 'Управление станциями'
@@ -100,7 +100,7 @@ class Main
   end
 
   def make_train(number, type_of_train)
-    raise "Incorrect type! Pleas <cargo> or <passenger>" if type_of_train != /(^cargo$|^passenger$)/
+    raise "Incorrect type! Pleas <cargo> or <passenger>" if type_of_train !~ /(^cargo$|^passenger$)/
     self.trains.append(CargoTrain.new(number)) if type_of_train == 'cargo'
     self.trains.append(PassengerTrain.new(number)) if type_of_train == 'passenger'
   end

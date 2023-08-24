@@ -96,7 +96,7 @@ class Train
 
   def validate!
     raise "Number can't be nill" if number.nil?
-    raise "Number should be at least 6 symbols" if number != NUMBER_FORMAT
+    raise "Invalid format of number" if number !~ NUMBER_FORMAT
   end
 
   def speed?

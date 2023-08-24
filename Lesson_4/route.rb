@@ -6,6 +6,8 @@ class Route
 
   # Начальная и конечная станции указываются при создании маршрута
   def initialize(start_station, end_station)
+    raise "Station can't be nill" if start_station.nil?
+    raise "Station can't be nill" if end_station.nil?
     @stations = {0=>start_station, 1=>end_station} # Порядковый номер на маршруте => Название станции
     @@instances_count = register_instance(@@instances_count)
   end
@@ -38,4 +40,7 @@ class Route
   def show_route
     self.stations.sort.each{ |st| puts "Номер: #{st[0]}, название: #{st[1].name}"}
   end
+
+
+
 end

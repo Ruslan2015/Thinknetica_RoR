@@ -5,6 +5,8 @@ class Train
   #include InstanceCounter
   @@trains = []
 
+  NUMBER_FORMAT = /^[a-z0-9]{3}-*[a-z0-9]{2}$/i
+
   def self.all
     @@trains
   end
@@ -30,6 +32,7 @@ class Train
     @route = nil
     @current_station_index = nil
     #@@instances_count = register_instance(@@instances_count)
+    validate!
   end
 
   # Тормозит (сбрасывает скорость до 0)
@@ -77,15 +80,27 @@ class Train
   end
 
   def previous_station
-    if current_station_index > 0 then
+    if current_station_index > 0
       route.stations[self.current_station_index - 1]
     end
   end
 
+  def valid?
+    validate!
+    true
+  rescue
+    false
+  end
+
   protected
 
+  def validate!
+    raise "Number can't be nill" if number.nil?
+    raise "Number should be at least 6 symbols" if number != NUMBER_FORMAT
+  end
+
   def speed?
-    if speed == 0 then
+    if speed == 0
       false
     else
       speed

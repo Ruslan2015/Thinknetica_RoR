@@ -100,6 +100,7 @@ class Main
   end
 
   def make_train(number, type_of_train)
+    raise "Incorrect type! Pleas <cargo> or <passenger>" if type_of_train != /(^cargo$|^passenger$)/
     self.trains.append(CargoTrain.new(number)) if type_of_train == 'cargo'
     self.trains.append(PassengerTrain.new(number)) if type_of_train == 'passenger'
   end
@@ -178,7 +179,15 @@ class Main
         puts 'Создание станции'
 
       elsif chois == 'B' then
+        begin
         puts 'Создание поезда'
+        number_of_train = gets.chomp
+        type_of_train = gets.chomp
+        make_train(number_of_train, type_of_train)
+        rescue
+          puts 'Неверные реквизиты поезда'
+          retry
+        end
 
       elsif chois == 'C' then
         puts 'Создание маршрута'

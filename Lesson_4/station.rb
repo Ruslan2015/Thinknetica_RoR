@@ -11,12 +11,15 @@ class Station
   attr_accessor :trains_at_the_station
   attr_accessor :name
 
+  NAME_FORMAT = /^[a-z]+$/i
   # При создании указывается название
   def initialize(name)
     @name = name
+    validate!
     @trains_at_the_station = []
     @@stations << self
     @@instances_count = register_instance(@@instances_count)
+
   end
 
 
@@ -47,5 +50,19 @@ class Station
   def send_the_train=(id_of_train)
     # Удалить из списка соответствующий объект
     trains_at_the_station.delete(id_of_train)
+  end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
+  end
+
+  protected
+
+  def validate!
+    raise "Name of station can't be nill" if name.nil?
+    raise "Name of station should be text" if name != NAME_FORMAT
   end
 end
